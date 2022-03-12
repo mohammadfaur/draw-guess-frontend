@@ -1,0 +1,13 @@
+.waiting {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  text-align: center;
+}
+
+.btn {
+  margin-top: 15px;
+  border-radius: 14px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
+}
