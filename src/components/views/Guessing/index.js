@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import classes from './style.module.css';
 import CanvasDraw from 'react-canvas-draw';
-import Button from '../../components/UI/Button';
+import Button from '../../UI/Button';
 import axios from 'axios';
 import { message } from 'antd';
 

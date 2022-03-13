@@ -2,11 +2,9 @@ import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import classes from './style.module.css';
-import Card from '../../components/UI/Card';
-import Button from '../../components/UI/Button';
+import Card from '../../UI/Card';
+import Button from '../../UI/Button';
 import { message } from 'antd';
-
-const { REACT_APP_API_URL } = process.env;
 
 const Welcome = (props) => {
   const playNameInputRef = useRef();
@@ -20,14 +18,15 @@ const Welcome = (props) => {
       return;
     }
     axios
-      .post(`${REACT_APP_API_URL}/api/sessions/new`, { playerName: playerName })
+      .post(`${props.apiUrl}/api/sessions/new`, { playerName: playerName })
       .then(({ data }) => {
+        props.updatePlayerType('host');
         sessionStorage.setItem('sessionId', data.sessionId);
         message.success(
           'A new game is created, please wait until the second player joins..',
           3
         );
-        goTo(`/${data.sessionId}/wait`);
+        goTo(`game-room/${data.sessionId}`);
       })
       .catch((error) => {
         console.error(error);

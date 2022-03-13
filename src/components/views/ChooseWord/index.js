@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import classes from './style.module.css';
-import Card from '../../components/UI/Card';
+import Card from '../../UI/Card';
 import { generateSlug } from 'random-word-slugs';
 import axios from 'axios';
 

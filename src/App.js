@@ -1,19 +1,38 @@
+import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import Welcome from './views/Welcome';
-import Drawing from './views/Drawing';
-import ChooseWord from './views/ChooseWord';
-import Guessing from './views/Guessing';
-import Waiting from './views/Waiting';
+import Welcome from './components/views/Welcome';
+import GameSession from './components/GameSession';
+
+const { REACT_APP_API_URL } = process.env;
 
 function App() {
+  const [playerType, setPlayerType] = useState('');
+
+  //type => to differentiate between a host and a guest.
+  const playerTypeHandler = (type) => setPlayerType(() => type);
+
   return (
     <Routes>
-      <Route path='/' element={<Welcome />} />
-      <Route path=':id/wait' element={<Waiting />} />
-      <Route path=':id/choose-word' element={<ChooseWord />} />
-      <Route path=':id/draw' element={<Drawing />} />
-      <Route path=':id/guess' element={<Guessing />} />
+      <Route
+        path='/'
+        element={
+          <Welcome
+            updatePlayerType={playerTypeHandler}
+            apiUrl={REACT_APP_API_URL}
+          />
+        }
+      />
+      <Route
+        path='game-room/:id'
+        element={
+          <GameSession
+            playerType={playerType}
+            updatePlayerType={playerTypeHandler}
+            apiUrl={REACT_APP_API_URL}
+          />
+        }
+      />
     </Routes>
   );
 }
