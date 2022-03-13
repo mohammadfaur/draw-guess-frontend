@@ -7,7 +7,8 @@ import axios from 'axios';
 
 const GuestEntrance = (props) => {
   const guestNameInputRef = useRef();
-  const { sessionId } = props.sessionId;
+  const sessionId = props.sessionId;
+
   const submitHandler = (event) => {
     event.preventDefault();
     const enteredName = guestNameInputRef.current.value;
@@ -20,10 +21,11 @@ const GuestEntrance = (props) => {
         sessionId,
         playerName: enteredName,
       })
-      .then(() => {
+      .then(({ data }) => {
         props.setPlayerType('guest');
-        message.success('Welcome..');
+        message.success('Welcome..', 1);
         sessionStorage.setItem('sessionId', sessionId);
+        sessionStorage.setItem('playerId', JSON.stringify(data.guestId));
       })
       .catch((error) => {
         console.error(error);

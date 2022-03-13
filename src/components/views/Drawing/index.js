@@ -1,23 +1,28 @@
-import { useRef, useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useRef, useState } from 'react';
 import classes from './style.module.css';
 import CanvasDraw from 'react-canvas-draw';
 import axios from 'axios';
+import { message } from 'antd';
 
-const { REACT_APP_API_URL } = process.env;
-
-const Drawing = () => {
-  const [brushRadius, setBrushRadius] = useState(10);
-  const [brushColor, setBrushColor] = useState('#ffc600');
+const Drawing = (props) => {
+  const [brushRadius, setBrushRadius] = useState(3);
+  const [brushColor, setBrushColor] = useState('#105789');
   const [data, setData] = useState(null);
   const canvasRef = useRef();
-  const { id: sessionId } = useParams();
+  const sessionId = props.sessionId;
 
   const onSendHandler = () => {
-    axios.put(`${REACT_APP_API_URL}/api/update/drawings`, {
-      drawData: data,
-      sessionId,
-    });
+    axios
+      .put(`${props.apiUrl}/api/update/drawings`, {
+        drawData: data,
+        sessionId,
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error.response) {
+          message.error(error.response.data);
+        }
+      });
   };
 
   const brushRadiusChangeHandler = (event) => {
@@ -32,7 +37,6 @@ const Drawing = () => {
 
   const canvasChangeHandler = (event) => setData(() => event.getSaveData());
 
-  console.log(canvasRef);
   return (
     <div className={classes.canvas}>
       <div className={classes['brush-radius']}>

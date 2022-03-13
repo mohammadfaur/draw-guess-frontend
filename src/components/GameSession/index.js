@@ -12,6 +12,8 @@ import { message } from 'antd';
 const defaultGameDataState = {
   sessionId: null,
   status: 'pending',
+  hostTurn: true,
+  drawData: null,
   hostId: null,
   guestId: null,
   hostName: '',
@@ -19,14 +21,18 @@ const defaultGameDataState = {
   guestName: '',
   guestScore: 0,
   playerType: '',
+  wordPicked: false,
 };
 
 const gameDataReducer = (state, action) => {
   if (action.type === 'HTTP_REQUEST') {
-    return { ...action.data, playerType: state.playerType };
+    return { ...state, ...action.data };
   }
   if (action.type === 'SET_PLAYER_TYPE') {
     return { ...state, playerType: action.playerType };
+  }
+  if (action.type === 'SET_WORD') {
+    return { ...state, wordPicked: action.hide };
   }
   return defaultGameDataState;
 };
@@ -38,9 +44,16 @@ const GameSession = (props) => {
   );
   const { id: sessionId } = useParams();
 
-  const { guestId, hostName, guestName, playerType, status } = gameData;
-
-  console.log(1);
+  const {
+    guestId,
+    hostName,
+    guestName,
+    playerType,
+    status,
+    hostTurn,
+    drawData,
+    wordPicked,
+  } = gameData;
 
   const onFetchGameDataHandler = (data) => {
     dispatchGameAction({ type: 'HTTP_REQUEST', data: data });
@@ -50,9 +63,13 @@ const GameSession = (props) => {
     dispatchGameAction({ type: 'SET_PLAYER_TYPE', playerType: type });
   };
 
-  // useEffect(() => {
-  //   playerTypeHandler(props.playerType);
-  // }, [props.playerType]);
+  const pickWordHandler = (value) => {
+    dispatchGameAction({ type: 'SET_WORD', hide: value });
+  };
+
+  useEffect(() => {
+    playerTypeHandler(props.playerType);
+  }, [props.playerType]);
 
   useEffect(() => {
     setInterval(() => {
@@ -83,11 +100,59 @@ const GameSession = (props) => {
     return (
       <Waiting
         playerType={props.playerType}
+        apiUrl={props.apiUrl}
+        sessionId={sessionId}
         guestId={guestId}
         hostName={hostName}
         guestName={guestName}
       />
     );
+  }
+  if (status === 'live') {
+    if (hostTurn && playerType === 'guest') {
+      return (
+        <Guessing
+          drawData={drawData}
+          apiUrl={props.apiUrl}
+          sessionId={sessionId}
+          hostTurn={hostTurn}
+          pickWordStateHandler={pickWordHandler}
+        />
+      );
+    }
+    if (!hostTurn && playerType === 'guest') {
+      return wordPicked ? (
+        <Drawing apiUrl={props.apiUrl} sessionId={sessionId} />
+      ) : (
+        <ChooseWord
+          apiUrl={props.apiUrl}
+          sessionId={sessionId}
+          pickWordStateHandler={pickWordHandler}
+        />
+      );
+    }
+    if (hostTurn && playerType === 'host') {
+      return wordPicked ? (
+        <Drawing apiUrl={props.apiUrl} sessionId={sessionId} />
+      ) : (
+        <ChooseWord
+          apiUrl={props.apiUrl}
+          sessionId={sessionId}
+          pickWordStateHandler={pickWordHandler}
+        />
+      );
+    }
+    if (!hostTurn && playerType === 'host') {
+      return (
+        <Guessing
+          drawData={drawData}
+          apiUrl={props.apiUrl}
+          sessionId={sessionId}
+          hostTurn={hostTurn}
+          pickWordStateHandler={pickWordHandler}
+        />
+      );
+    }
   }
 
   return <h1>why I'm here</h1>;

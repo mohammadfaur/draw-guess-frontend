@@ -1,26 +1,33 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 import classes from './style.module.css';
 import Card from '../../UI/Card';
 import { generateSlug } from 'random-word-slugs';
 import axios from 'axios';
+import { message } from 'antd';
 
-const { REACT_APP_API_URL } = process.env;
-
-const ChooseWord = () => {
+const ChooseWord = (props) => {
   const [words, setWords] = useState(
     generateSlug(3, { format: 'title' }).split(' ')
   );
   const [selectedWord, setSelectedWord] = useState('');
-  const goTo = useNavigate();
-  const { id: sessionId } = useParams();
+  const sessionId = props.sessionId;
 
   useEffect(() => {
     if (selectedWord) {
-      axios.put(`${REACT_APP_API_URL}/api/update/chosen/word`, {
-        chosenWord: selectedWord,
-        sessionId,
-      });
+      axios
+        .put(`${props.apiUrl}/api/update/chosen/word`, {
+          chosenWord: selectedWord,
+          sessionId,
+        })
+        .then(() => {
+          props.pickWordStateHandler(true);
+        })
+        .catch((error) => {
+          console.error(error);
+          if (error.response) {
+            message.error(error.response.data);
+          }
+        });
     }
 
     // goTo(`${sessionId}/draw`);

@@ -22,10 +22,8 @@ const Welcome = (props) => {
       .then(({ data }) => {
         props.updatePlayerType('host');
         sessionStorage.setItem('sessionId', data.sessionId);
-        message.success(
-          'A new game is created, please wait until the second player joins..',
-          3
-        );
+        sessionStorage.setItem('playerId', data.playerId);
+        message.success('A new game has been created..', 2);
         goTo(`game-room/${data.sessionId}`);
       })
       .catch((error) => {
