@@ -89,9 +89,7 @@ const Guessing = (props) => {
 
   return (
     <div className={classes.guess}>
-      <button onClick={onLoadHandler}>Load Saved Data</button>
       <CanvasDraw ref={loadCanvasRef} disabled hideGrid />
-      {/*saveData={''}  */}
       <form onSubmit={submitHandler}>
         <label htmlFor='guessing-input'></label>
         <input type='text' id='guessing-input' ref={guessInputRef} />
