@@ -21,7 +21,7 @@ const Guessing = (props) => {
   const submitHandler = (event) => {
     event.preventDefault();
     if (guessInputRef.current.value.trim().length === 0) {
-      message.error('Empty field is invalid input.');
+      message.error('Empty field is invalid input.', 1);
       return;
     }
     //check the guessed word.

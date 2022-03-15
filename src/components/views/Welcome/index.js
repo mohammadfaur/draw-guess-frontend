@@ -16,7 +16,8 @@ const Welcome = (props) => {
     const playerName = playNameInputRef.current.value;
     if (!playerName.trim().length || playerName.trim().length > 25) {
       message.error(
-        'Empty name or too Long name are invalid, Please enter a valid name.'
+        'Empty name or too Long name are invalid, Please enter a valid name.',
+        2
       );
       return;
     }
