@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import './style.css';
 import { Table, message } from 'antd';
 import axios from 'axios';
@@ -28,6 +28,10 @@ const TopTenPlayers = (props) => {
         }
       });
   }, [props.apiUrl]);
+
+  if (!topTenPlayer.length) {
+    return <></>;
+  }
 
   return (
     <Table dataSource={topTenPlayer} pagination={false}>
