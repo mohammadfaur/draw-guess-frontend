@@ -28,35 +28,15 @@ const Guessing = (props) => {
     axios
       .post(`${props.apiUrl}/api/guess/attempt`, {
         sessionId,
+        playerId,
+        hostTurn: !props.hostTurn,
         guessedWord: guessInputRef.current.value,
       })
       .then(({ data: isCorrect }) => {
         if (isCorrect) {
-          //update score.
-          axios
-            .put(`${props.apiUrl}/api/update/player/score`, {
-              sessionId,
-              playerId,
-              correctWord: guessInputRef.current.value,
-            })
-            .then(() => {
-              //switch turns.
-              axios
-                .put(`${props.apiUrl}/api/switch/player/turn`, {
-                  sessionId,
-                  hostTurn: !props.hostTurn,
-                })
-                .then(() => {
-                  //reset drew image.
-                  axios.put(`${props.apiUrl}/api/update/drawings`, {
-                    drawData: null,
-                    sessionId,
-                  });
-                });
-              props.pickWordStateHandler(false); //so when turns switch => enable choosing a word.
-              message.success('You guessed it right!', 2);
-              message.success('Now you are the artist.', 2);
-            });
+          props.pickWordStateHandler(false); //so when turns switch => enable choosing a word.
+          message.success('You guessed it right!', 2);
+          message.success('Now you are the artist.', 2);
         } else {
           message.warning('Incorrect, try again', 1);
         }

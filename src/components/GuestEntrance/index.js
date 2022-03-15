@@ -12,8 +12,10 @@ const GuestEntrance = (props) => {
   const submitHandler = (event) => {
     event.preventDefault();
     const enteredName = guestNameInputRef.current.value;
-    if (!enteredName) {
-      message.error('Empty name is invalid, Please enter a valid name.');
+    if (!enteredName.trim().length || enteredName.trim().length > 25) {
+      message.error(
+        'Empty name or long name are invalid, Please enter a valid name.'
+      );
       return;
     }
     axios

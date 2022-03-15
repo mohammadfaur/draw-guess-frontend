@@ -5,6 +5,7 @@ import classes from './style.module.css';
 import Card from '../../UI/Card';
 import Button from '../../UI/Button';
 import { message } from 'antd';
+import TopTenPlayers from '../TopTenPlayers';
 
 const Welcome = (props) => {
   const playNameInputRef = useRef();
@@ -13,8 +14,10 @@ const Welcome = (props) => {
   const submitHandler = (event) => {
     event.preventDefault();
     const playerName = playNameInputRef.current.value;
-    if (!playerName) {
-      message.error('Empty name is invalid, Please enter a valid name.');
+    if (!playerName.trim().length || playerName.trim().length > 25) {
+      message.error(
+        'Empty name or too Long name are invalid, Please enter a valid name.'
+      );
       return;
     }
     axios
@@ -36,14 +39,17 @@ const Welcome = (props) => {
   return (
     <Card className={classes.welcome}>
       <h1>Draw &amp; Guess</h1>
-      <p>Click create to make a new game session.</p>
-      <form onSubmit={submitHandler}>
+      <p className={classes.para}>Click create to make a new game session.</p>
+      <form className={classes.form} onSubmit={submitHandler}>
         <div>
           <label htmlFor='name'>Enter You Name:</label>
           <input type='text' id='name' ref={playNameInputRef} />
         </div>
-        <Button type='submit'>Create Game</Button>
+        <Button type='submit' className={classes.btn}>
+          Create Game
+        </Button>
       </form>
+      <TopTenPlayers apiUrl={props.apiUrl} />
     </Card>
   );
 };

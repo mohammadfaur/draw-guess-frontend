@@ -1,13 +1,89 @@
 .waiting {
+  width: 90%;
+  margin: 1.5rem auto;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: stretch;
+  justify-content: center;
+  align-items: center;
   text-align: center;
 }
 
+.players {
+  width: 50%;
+  margin: 1rem;
+  padding: 1rem 1.5rem;
+  font-size: 1.3rem;
+  box-shadow: 0 8px 15px rgba(11, 56, 21, 0.25);
+}
+
+.spin-or-button {
+  margin: 1.5rem;
+  font-size: 1rem;
+}
+
+/* spin tip */
+.spin-or-button div div {
+  font-size: 1.2rem;
+}
+
 .btn {
-  margin-top: 15px;
   border-radius: 14px;
+  padding: 0.25rem 4rem;
+  font-size: 1.5rem;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+}
+
+.clipboard {
+  margin: 0.5rem;
+  display: flex;
+}
+
+.clipboard input {
+  margin-right: 0.1rem;
+  border-radius: 14px 0 0 14px;
+  padding: 0.2rem 0 0.2rem 0;
+}
+
+.copy-to-clipboard-btn {
+  border: 1px solid #005a14;
+  background: #005a14;
+  color: white;
+  cursor: pointer;
+  border-radius: 0 14px 14px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.copy-to-clipboard-btn:hover,
+.copy-to-clipboard-btn:active {
+  background: #208836;
+  border-color: #208836;
+}
+
+@media (max-width: 430px) {
+  .clipboard {
+    margin: 0.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .clipboard input {
+    margin-top: 0.5rem;
+    margin-bottom: 0.1rem;
+    border-radius: 14px;
+    padding: 0.2rem 0 0.2rem 0;
+  }
+  .copy-to-clipboard-btn {
+    border: 1px solid #005a14;
+    background: #005a14;
+    color: white;
+    cursor: pointer;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  }
+
+  .copy-to-clipboard-btn:hover,
+  .copy-to-clipboard-btn:active {
+    background: #208836;
+    border-color: #208836;
+  }
 }

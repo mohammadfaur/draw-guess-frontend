@@ -1,5 +1,5 @@
-import { useEffect, useReducer } from 'react';
-import { useParams } from 'react-router-dom';
+import { Fragment, useEffect, useReducer } from 'react';
+import { useParams, useNavigate, Redirect } from 'react-router-dom';
 import Drawing from '../views/Drawing';
 import ChooseWord from '../views/ChooseWord';
 import Guessing from '../views/Guessing';
@@ -22,6 +22,7 @@ const defaultGameDataState = {
   guestScore: 0,
   playerType: '',
   wordPicked: false,
+  intervalID: null,
 };
 
 const gameDataReducer = (state, action) => {
@@ -31,8 +32,11 @@ const gameDataReducer = (state, action) => {
   if (action.type === 'SET_PLAYER_TYPE') {
     return { ...state, playerType: action.playerType };
   }
-  if (action.type === 'SET_WORD') {
-    return { ...state, wordPicked: action.hide };
+  if (action.type === 'WORD_IS_SET') {
+    return { ...state, wordPicked: action.booleanState };
+  }
+  if (action.type === 'SET_INTERVAL_ID') {
+    return { ...state, intervalID: action.id };
   }
   return defaultGameDataState;
 };
@@ -43,6 +47,7 @@ const GameSession = (props) => {
     defaultGameDataState
   );
   const { id: sessionId } = useParams();
+  const goTo = useNavigate();
 
   const {
     guestId,
@@ -53,6 +58,7 @@ const GameSession = (props) => {
     hostTurn,
     drawData,
     wordPicked,
+    intervalID,
   } = gameData;
 
   const onFetchGameDataHandler = (data) => {
@@ -64,30 +70,71 @@ const GameSession = (props) => {
   };
 
   const pickWordHandler = (value) => {
-    dispatchGameAction({ type: 'SET_WORD', hide: value });
+    dispatchGameAction({ type: 'WORD_IS_SET', booleanState: value });
   };
+
+  const intervalIdHandler = (id) => {
+    dispatchGameAction({ type: 'SET_INTERVAL_ID', id: id });
+  };
+
+  useEffect(() => {
+    window.onbeforeunload = (event) => {
+      fetch(`${props.apiUrl}/api/update/session/status`, {
+        method: 'PUT',
+        keepalive: true,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sessionId,
+          status: 'expired',
+        }),
+      }).catch((error) => {
+        console.error(error);
+        alert(error.message);
+      });
+    };
+
+    return () => (window.onbeforeunload = null);
+  }, []);
 
   useEffect(() => {
     playerTypeHandler(props.playerType);
   }, [props.playerType]);
 
   useEffect(() => {
-    setInterval(() => {
-      axios
-        .post(`${props.apiUrl}/api/session/data`, { sessionId })
-        .then(({ data }) => {
-          onFetchGameDataHandler(data);
-        })
-        .catch((error) => {
-          console.error(error);
-          if (error.response) {
-            message.error(error.response.data);
-          }
-        });
-    }, 2000);
-  }, [sessionId, props.apiUrl]);
+    //an api reuest will be fired every 2 seconds.
+    //intervalID will be stored in the session game state to clear the interval when a session expires.
+    if (status === 'pending') {
+      const identifier = setInterval(() => {
+        intervalIdHandler(identifier);
+        axios
+          .post(`${props.apiUrl}/api/session/data`, { sessionId })
+          .then(({ data }) => {
+            onFetchGameDataHandler(data);
+          })
+          .catch((error) => {
+            console.error(error);
+            if (error.response) {
+              message.error(error.response.data);
+            }
+          });
+      }, 2000);
+    }
 
-  if (!playerType) {
+    if (status === 'expired') {
+      goTo('/');
+      message.error(
+        'Game session has been ended, you can create a new one.',
+        3
+      );
+      return () => {
+        clearInterval(intervalID);
+      };
+    }
+  }, [sessionId, status, props.apiUrl]);
+
+  if (!playerType && status === 'pending') {
     return (
       <GuestEntrance
         setPlayerType={props.updatePlayerType}
@@ -155,7 +202,19 @@ const GameSession = (props) => {
     }
   }
 
-  return <h1>why I'm here</h1>;
+  return (
+    <Fragment>
+      <p>Unlikable Access</p>
+      <button
+        onClick={() => {
+          clearInterval(intervalID);
+          goTo('/');
+        }}
+      >
+        Redirect
+      </button>
+    </Fragment>
+  );
 };
 
 export default GameSession;

@@ -3,13 +3,17 @@ import classes from './style.module.css';
 import CanvasDraw from 'react-canvas-draw';
 import axios from 'axios';
 import { message } from 'antd';
+import Button from '../../UI/Button';
 
 const Drawing = (props) => {
   const [brushRadius, setBrushRadius] = useState(3);
-  const [brushColor, setBrushColor] = useState('#105789');
+  const [brushColor, setBrushColor] = useState('#C539C2');
   const [data, setData] = useState(null);
   const canvasRef = useRef();
   const sessionId = props.sessionId;
+
+  // const width = Math.floor(window.innerWidth * (70 / 100));
+  // const height = width;
 
   const onSendHandler = () => {
     axios
@@ -29,7 +33,14 @@ const Drawing = (props) => {
     setBrushRadius(() => setBrushRadius(parseInt(event.target.value, 10)));
   };
 
-  const onColorChange = (event) => setBrushColor(() => event.target.value);
+  const onColorChange = (event) =>
+    setBrushColor(() => {
+      const size = +event.target.value;
+      if (size <= 1) {
+        return 1;
+      }
+      return size;
+    });
 
   const clearHandle = () => canvasRef.current.clear();
 
@@ -37,16 +48,39 @@ const Drawing = (props) => {
 
   const canvasChangeHandler = (event) => setData(() => event.getSaveData());
 
+  const onRaiseSizeHandler = () => setBrushRadius((prevSize) => prevSize + 1);
+
+  const onLoweringSizeHandler = () =>
+    setBrushRadius((prevSize) => {
+      if (prevSize === 1) {
+        return 1;
+      }
+      return prevSize - 1;
+    });
+
   return (
     <div className={classes.canvas}>
       <div className={classes['brush-radius']}>
         <label htmlFor='brush-radius'>Brush Radious:</label>
+        <button
+          className={classes['brush-radius-btns']}
+          onClick={onLoweringSizeHandler}
+        >
+          -
+        </button>
+
         <input
           type='number'
           id='brush-radius'
           onChange={brushRadiusChangeHandler}
           value={brushRadius}
         />
+        <button
+          className={classes['brush-radius-btns']}
+          onClick={onRaiseSizeHandler}
+        >
+          +
+        </button>
       </div>
       <div className={classes['color-picker']}>
         <label htmlFor='color-picker'>Color Picker:</label>
@@ -58,19 +92,25 @@ const Drawing = (props) => {
         />
       </div>
       <div className={classes['canvas-control-buttons']}>
-        <button onClick={clearHandle}>Clear</button>
-        <button onClick={undoHandle}>Undo</button>
+        <Button className={classes['clear-button']} onClick={clearHandle}>
+          Clear
+        </Button>
+        <Button className={classes['undo-button']} onClick={undoHandle}>
+          Undo
+        </Button>
+        <Button className={classes['send-button']} onClick={onSendHandler}>
+          Send
+        </Button>
       </div>
       <CanvasDraw
         ref={canvasRef}
         brushRadius={brushRadius}
         brushColor={brushColor}
+        lazyRadius={5}
+        // canvasWidth={width}
+        // canvasHeight={height}
         onChange={canvasChangeHandler}
       />
-      <div className={classes['send-button']}>
-        <button onClick={onSendHandler}>Send</button>
-        {/* onClick fetch data */}
-      </div>
     </div>
   );
 };

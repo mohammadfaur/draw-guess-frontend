@@ -7,6 +7,7 @@ import { Spin, message } from 'antd';
 import axios from 'axios';
 
 const Waiting = (props) => {
+  //showElements is determined according to playerType
   const [showElements, setShowElements] = useState(false);
 
   const showElementsHandler = (value) => setShowElements(() => value);
@@ -46,15 +47,17 @@ const Waiting = (props) => {
         }
       />
       {showElements && (
-        <Fragment>
+        <div className={classes.clipboard}>
           <input type='text' value={sharedURL} readOnly />
           <CopyToClipboard
             text={sharedURL}
             onCopy={() => message.success('Copied', 0.5)}
           >
-            <button>Copy to clipboard</button>
+            <Button className={classes['copy-to-clipboard-btn']}>
+              Copy to clipboard
+            </Button>
           </CopyToClipboard>
-        </Fragment>
+        </div>
       )}
     </Fragment>
   );
@@ -76,7 +79,7 @@ const Waiting = (props) => {
       {props.guestName && (
         <Card className={classes.players}>{props.guestName}</Card>
       )}
-      {showSpinOrStart}
+      <div className={classes['spin-or-button']}>{showSpinOrStart}</div>
     </Card>
   );
 };

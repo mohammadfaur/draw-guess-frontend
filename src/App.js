@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import Welcome from './components/views/Welcome';
 import GameSession from './components/GameSession';
+import Drawing from './components/views/Drawing';
 
 const { REACT_APP_API_URL } = process.env;
 
@@ -32,6 +33,12 @@ function App() {
             apiUrl={REACT_APP_API_URL}
           />
         }
+      />
+
+      {/* testing */}
+      <Route
+        path='/drawing'
+        element={<Drawing apiUrl={REACT_APP_API_URL} sessionId={1} />}
       />
     </Routes>
   );

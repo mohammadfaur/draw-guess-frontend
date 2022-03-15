@@ -1,3 +1,86 @@
+.canvas {
+  width: 100%;
+  margin: 1rem auto;
+  font-size: 1.2rem;
+}
+
+.brush-radius {
+  display: flex;
+  align-items: center;
+}
+
+.brush-radius label {
+  padding-right: 0.5rem;
+}
+
 .brush-radius input {
   width: 30px;
+  height: 30px;
+  text-align: center;
+}
+
+.brush-radius-btns {
+  font-size: 1.1rem;
+  margin: 0.2rem;
+  border: 1px solid #3279a8;
+  background: #3279a8;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  padding: 0 0.5rem;
+  width: 30px;
+  height: 30px;
+  color: white;
+}
+
+.brush-radius-btns:hover,
+.brush-radius-btns:active {
+  background: #2abbc8;
+  border-color: #2abbc8;
+}
+
+.color-picker {
+  margin: 0.3rem auto;
+  display: flex;
+  align-items: center;
+}
+
+.color-picker label {
+  padding-right: 0.5rem;
+}
+
+.canvas-control-buttons {
+  margin: 0.3rem auto;
+  margin-bottom: 1rem;
+}
+
+.clear-button {
+  margin-right: 0.4rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  border: 1px solid #a70303;
+  background: #a70303;
+}
+.clear-button:hover,
+.clear-button:active {
+  background: #da2f2f;
+  border-color: #da2f2f;
+}
+.undo-button {
+  margin-right: 0.4rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  border: 1px solid #af7800;
+  background: #af7800;
+}
+.undo-button:hover,
+.undo-button:active {
+  background: #f0b22c;
+  border-color: #f0b22c;
+}
+.send-button {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  border: 1px solid #0ea500;
+  background: #0ea500;
+}
+.send-button:hover,
+.send-button:active {
+  background: #4cd840;
+  border-color: #4cd840;
 }
