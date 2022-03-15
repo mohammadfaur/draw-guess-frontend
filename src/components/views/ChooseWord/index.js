@@ -35,21 +35,23 @@ const ChooseWord = (props) => {
 
   const onSelectHandler = (event) => setSelectedWord(() => event.target.value);
   return (
-    <Card className={classes.words}>
-      <p>Please select a word to draw.</p>
-      {words &&
-        words.map((word) => (
-          <div className={classes.choose} key={word}>
-            <input
-              type='radio'
-              id={word}
-              value={word}
-              name='word'
-              onChange={onSelectHandler}
-            />
-            <label htmlFor={word}>{word}</label>
-          </div>
-        ))}
+    <Card className={classes['choose-words']}>
+      <p>Pick a word from below to draw:</p>
+      <div className={classes.words}>
+        {words &&
+          words.map((word) => (
+            <div className={classes.choice} key={word}>
+              <input
+                type='radio'
+                id={word}
+                value={word}
+                name='word'
+                onChange={onSelectHandler}
+              />
+              <label htmlFor={word}>{word}</label>
+            </div>
+          ))}
+      </div>
     </Card>
   );
 };
