@@ -12,9 +12,6 @@ const Drawing = (props) => {
   const canvasRef = useRef();
   const sessionId = props.sessionId;
 
-  // const width = Math.floor(window.innerWidth * (70 / 100));
-  // const height = width;
-
   const onSendHandler = () => {
     axios
       .put(`${props.apiUrl}/api/update/drawings`, {
@@ -30,17 +27,16 @@ const Drawing = (props) => {
   };
 
   const brushRadiusChangeHandler = (event) => {
-    setBrushRadius(() => setBrushRadius(parseInt(event.target.value, 10)));
-  };
-
-  const onColorChange = (event) =>
-    setBrushColor(() => {
-      const size = +event.target.value;
+    setBrushRadius(() => {
+      const size = parseInt(+event.target.value, 10);
       if (size <= 1) {
         return 1;
       }
       return size;
     });
+  };
+
+  const onColorChange = (event) => setBrushColor(() => event.target.value);
 
   const clearHandle = () => canvasRef.current.clear();
 

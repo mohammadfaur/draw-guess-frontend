@@ -79,6 +79,8 @@ const GameSession = (props) => {
 
   useEffect(() => {
     window.onbeforeunload = (event) => {
+      event.preventDefault();
+      event.returnValue = '';
       fetch(`${props.apiUrl}/api/update/session/status`, {
         method: 'PUT',
         keepalive: true,
